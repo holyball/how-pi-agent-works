@@ -19,7 +19,7 @@ src/client/styles.css
 public/favicon.svg
 ```
 
-本节的目标不是做一个花哨 UI，而是让 Agent 内部状态可观察：消息、工具、事件都要看得见。
+本节的目标是让 Agent 内部状态变得可观察：消息、工具、事件都要看得见。界面不必花哨。
 
 ## 页面结构
 

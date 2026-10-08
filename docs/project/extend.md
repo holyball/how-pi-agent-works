@@ -278,4 +278,4 @@ Agent 工程的难点不在 happy path，而在这些边界：
 6. `packages/coding-agent/src/core/session-manager.ts`
 7. `packages/coding-agent/src/core/compaction/`
 
-读的时候记住一个判断标准：如果某段代码是在隔离 provider 差异、保护工具边界、恢复 session 上下文或维持事件流，那它大概率不是“复杂化”，而是在替你挡真实 Agent 会遇到的麻烦。
+读的时候记住一个判断标准：如果某段代码是在隔离 provider 差异、保护工具边界、恢复 session 上下文或维持事件流，那它大概率是在替你挡真实 Agent 会遇到的麻烦，这种复杂度是必要的。

@@ -116,7 +116,7 @@ agent-notes.md
 教学工作区里有 README.md 和 agent-notes.md...
 ```
 
-如果模型没有返回 tool call，Demo 会打印它的直接回答。这不是脚本错误，而是模型行为差异；可以调整 prompt、模型名或工具描述再试。
+如果模型没有返回 tool call，Demo 会打印它的直接回答。这属于模型行为差异，不是脚本出错；可以调整 prompt、模型名或工具描述再试。
 
 如果模型连续请求工具超过 4 轮，Demo 会停止。这是为了演示真实 Agent 必须有无限 tool call 保护。
 

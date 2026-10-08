@@ -11,7 +11,7 @@
 
 | 结论 | 官方文档 / 源码位置 | 教学时怎么理解 |
 | --- | --- | --- |
-| 自动压缩触发条件是 `contextTokens > contextWindow - reserveTokens` | [Compaction 文档](https://pi.dev/docs/latest/compaction) 与 `compaction.ts` | 压缩不是按消息条数触发，而是给下一次模型回复预留空间 |
+| 自动压缩触发条件是 `contextTokens > contextWindow - reserveTokens` | [Compaction 文档](https://pi.dev/docs/latest/compaction) 与 `compaction.ts` | 压缩按预算触发，为下一次模型回复预留空间，与消息条数无关 |
 | 当前默认 `reserveTokens` 为 `16384`，`keepRecentTokens` 为 `20000` | [Compaction Settings](https://pi.dev/docs/latest/compaction#settings) | 一个控制“要留多少输出空间”，一个控制“最近原文保留多少” |
 | `CompactionEntry` 记录 `summary`、`firstKeptEntryId`、`tokensBefore` 和可选 `details` | [Session Format](https://pi.dev/docs/latest/session-format) | summary 不是孤立文本，它带着恢复上下文所需的边界指针 |
 | Pi 通常在 turn 边界切分，且不会在 `toolResult` 处切 | [Cut Point Rules](https://pi.dev/docs/latest/compaction#cut-point-rules) | 工具调用和工具结果必须保持语义连续 |
@@ -19,9 +19,9 @@
 | branch summary 发生在 `/tree` 切换分支时，解决的问题不同于 compaction | [Branch Summarization](https://pi.dev/docs/latest/compaction#branch-summarization) | compaction 是同一路径减重，branch summary 是换路径时带走经验 |
 | 默认摘要会累计文件读写信息 | [Cumulative File Tracking](https://pi.dev/docs/latest/compaction#cumulative-file-tracking) | 代码 Agent 需要知道哪些文件被读过、改过，而不只是聊天摘要 |
 
-这些细节不是为了炫技。它们共同解决一个问题：压缩后，模型看到的上下文必须仍然像“连续工作现场”，而不是一段抽象回忆录。
+这些细节都在解决同一个问题：压缩之后，模型看到的上下文要仍然像一个能接着干活的“连续工作现场”，而不只是一段抽象回忆。
 
-## 触发条件：不是消息多，而是预算不够
+## 触发条件：预算不足才压缩，与消息条数无关
 
 教学版可以用“上下文字符串长度超过阈值”模拟压缩。真实 Pi 更接近下面这个流程：
 
@@ -73,7 +73,7 @@ messages from firstKeptEntryId to current leaf
 
 ## cut point：为什么不能随便切
 
-工具调用让切分变复杂了。一次工具调用不是单条消息，而是至少包含：
+工具调用让切分变复杂了。一次工具调用往往不止一条消息，它至少包含：
 
 1. assistant 发出 `toolCall`。
 2. tool 执行并生成 `toolResult`。
@@ -160,7 +160,7 @@ Pi 官方摘要格式里包含 `<read-files>` 和 `<modified-files>`。默认实
 | 文件操作追踪 | 不实现 details | 避免把工具语义、摘要 prompt 和 session store 混在第一版里 |
 | branch summary | 放到扩展方向 | 需要会话树 UI 支撑，适合作为二阶段练习 |
 
-这不是偷懒，而是教学顺序。你先做出一个能跑、能保存、能压缩的最小 Agent，再回头把真实边界逐个补进去，会比一开始复刻 Pi 的完整压缩系统更稳。
+这样安排是出于教学顺序的考虑：先做出一个能跑、能保存、能压缩的最小 Agent，再回头把真实边界逐个补进去，会比一开始就复刻 Pi 的完整压缩系统更稳。
 
 ## 小练习
 
@@ -171,4 +171,4 @@ Pi 官方摘要格式里包含 `<read-files>` 和 `<modified-files>`。默认实
 3. 如果遇到 `toolResult`，保证它前面的 assistant tool call 也被保留，避免出现孤立工具结果。
 4. 在 compaction event 里展示 `tokensBefore`、`firstKeptEntryId` 和 `keptMessageCount`。
 
-完成后，你会更直观地理解真实 Pi 为什么要把压缩做成一个独立模块：它不是字符串裁剪，而是在保护协议边界、上下文预算和工程恢复能力。
+完成后，你会更直观地理解真实 Pi 为什么要把压缩做成一个独立模块：它要保护的是协议边界、上下文预算和工程恢复能力，远不止是裁剪字符串。

@@ -193,7 +193,7 @@ emit({ type: "message_end", message });
 const guardrail = createLoopGuardrailMessage(maxTurns);
 ```
 
-这不是可有可无的小细节。任何 Agent Loop 都需要停止条件：
+任何 Agent Loop 都需要停止条件：
 
 | 停止条件 | 说明 |
 | --- | --- |

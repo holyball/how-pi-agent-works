@@ -1,6 +1,6 @@
 # 源码阅读地图
 
-读 Pi 源码最容易卡住的地方，不是某个函数太难，而是入口太多：CLI、TUI、SDK、RPC、扩展、工具、模型供应商都在同一个 monorepo 里。正确读法是先找“稳定骨架”，再看产品层怎么把骨架包装成可用工具。
+读 Pi 源码时最容易卡住的，往往是入口太多：CLI、TUI、SDK、RPC、扩展、工具、模型供应商都挤在同一个 monorepo 里，让人不知道从哪读起。正确读法是先找“稳定骨架”，再看产品层怎么把骨架包装成可用工具。
 
 ## 先看哪一层
 
@@ -112,7 +112,7 @@ sequenceDiagram
 | 模型输入输出被统一成结构化消息和事件 | `pi-ai` |
 | Agent Loop 不直接做产品 I/O | `pi-agent-core` |
 | 工具副作用必须经过 schema、hook 和 tool result | `agent-loop.ts` 与 `tools/` |
-| 会话不是数组，而是 JSONL entry tree | `session-manager.ts` |
+| 会话组织成 JSONL entry 树，不是一维数组 | `session-manager.ts` |
 | 长上下文用摘要 entry 承接，而不是删除历史 | `compaction/` |
 
 读源码时只要发现某段代码在保护这些不变量，就先理解它“为什么存在”，再看它“具体怎么写”。

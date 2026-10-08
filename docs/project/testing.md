@@ -36,7 +36,7 @@ examples/teaching-agent/src/server/agent/
 
 ## Loop 测试：工具调用必须继续下一轮
 
-关键断言不是“模型返回了 tool call”，而是完整链路：
+关键断言盯的是整条链路能不能走通，光验证“模型返回了 tool call”是不够的：
 
 ```ts
 const result = await runAgentLoop({
@@ -95,7 +95,7 @@ assert.equal(last?.role, "assistant");
 assert.equal(last.errorMessage, "max_turns_exceeded");
 ```
 
-这里的重点不是 `1` 这个数字，而是系统必须有一个明确退出条件。生产版还会叠加超时、预算、用户中断和工具权限策略。
+这里的重点是系统必须有一个明确的退出条件，`1` 这个具体数字并不关键。生产版还会叠加超时、预算、用户中断和工具权限策略。
 
 ## 权限 hook：工具不是模型说了就执行
 

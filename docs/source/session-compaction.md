@@ -41,7 +41,7 @@ Pi 的 session entry 不只包括消息。不同 entry 负责恢复不同维度�
 
 ## 从 leaf 构建上下文
 
-构建上下文时，Pi 不是读取文件里的所有 message，而是从当前 `leafId` 沿 `parentId` 回到根，再反转。
+构建上下文时，Pi 会从当前 `leafId` 沿 `parentId` 一路回到根，再把顺序反转过来，只取这条路径上的 message。
 
 ```mermaid
 flowchart TD

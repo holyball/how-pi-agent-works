@@ -1,6 +1,6 @@
 # pi-ai：模型协议层
 
-`@earendil-works/pi-ai` 是 Pi 里最容易被低估的一层。它不负责“让 Agent 更聪明”，而是负责一件更底层的事：把不同模型供应商的输入、输出、流式事件和工具调用整理成同一种协议。
+`@earendil-works/pi-ai` 是 Pi 里最容易被低估的一层。它承担的是最底层的一件事：把不同模型供应商的输入、输出、流式事件和工具调用整理成同一种协议。
 
 如果没有这一层，Agent Loop 里会到处出现这样的分支：
 
@@ -49,7 +49,7 @@ type Context = {
 };
 ```
 
-输出不是一个字符串，而是一条 `AssistantMessage`：
+输出是一条结构化的 `AssistantMessage`：
 
 ```ts
 type AssistantMessage = {
@@ -120,7 +120,7 @@ flowchart LR
   E --> F["Provider adapter"]
 ```
 
-`MockModel` 的任务不是模拟某一家供应商，而是模拟协议层给 loop 的结果：
+`MockModel` 要模拟的是协议层交给 loop 的那个结果：
 
 ```ts
 const assistant = await model.complete({
